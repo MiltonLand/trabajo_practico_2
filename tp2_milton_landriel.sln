@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tp2_milton_landriel", "tp2_milton_landriel\tp2_milton_landriel.csproj", "{882CC063-5BBA-4382-8DB7-0265B5F3725A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data Access", "tp2_milton_landriel\Data Access.csproj", "{882CC063-5BBA-4382-8DB7-0265B5F3725A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
