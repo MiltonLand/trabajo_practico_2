@@ -1,0 +1,7 @@
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\bin\Debug\Presentation.exe.config
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\bin\Debug\Presentation.exe
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\bin\Debug\Presentation.pdb
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\obj\Debug\Presentation.csprojResolveAssemblyReference.cache
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\obj\Debug\Presentation.csproj.CoreCompileInputs.cache
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\obj\Debug\Presentation.exe
+C:\Users\Setzer\Documents\git_repositories\trabajo_practico_2\Presentation\obj\Debug\Presentation.pdb
