@@ -65,7 +65,8 @@ namespace Presentation
             newOrderDTO.OrderDate = getInput.Date("Please enter the order date: ");
             newOrderDTO.RequiredDate = getInput.Date("Please enter the required date: ");
             newOrderDTO.ShippedDate = getInput.Date("Please enter the shipped date: ");
-            newOrderDTO.Freight = getInput.positiveOrZeroDecimal();
+            newOrderDTO.ShipVia = getInput.ShipVia("Please enter the ship via: ");
+            newOrderDTO.Freight = getInput.positiveOrZeroDecimal("Please enter the freight: ");
             newOrderDTO.ShipName = getInput.ValidString("Please enter the ship name: ", 40);
             newOrderDTO.ShipAddress = getInput.ValidString("Please enter the ship address: ", 60);
             newOrderDTO.ShipCity = getInput.ValidString("Please enter the ship city: ", 15);

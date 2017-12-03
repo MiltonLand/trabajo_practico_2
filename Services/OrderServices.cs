@@ -19,7 +19,7 @@ namespace Services
         //Returns id on success, null on failure.
         public Nullable<int> AddNewOrder(OrderDTO orderDto)
         {
-            if (!validOrder(orderDto)) return null;
+            if (!ValidOrder(orderDto)) return null;
 
             var order = ConvertOrderDTO(orderDto);
 
@@ -28,7 +28,7 @@ namespace Services
 
             return order.OrderID;
         }
-        private bool validOrder(OrderDTO orderDto)
+        private bool ValidOrder(OrderDTO orderDto)
         {
             if (orderDto.CustomerID.Count() != 5) return false;
 

@@ -16,7 +16,7 @@ namespace Services
             repository = new Repository<Employee>();
         }
 
-        public Nullable<int> findEmployeeIdByName(string fName, string lName)
+        public Nullable<int> FindEmployeeIdByName(string fName, string lName)
         {
             var employee = repository.Set()
                 .FirstOrDefault(e => e.FirstName == fName && e.LastName == lName);

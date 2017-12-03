@@ -43,7 +43,7 @@ namespace Presentation
             {
                 eFirstName = this.ValidString("Please enter the employee's first name: ");
                 eLastName = this.ValidString("Please enter the employee's last name: ");
-                eID = services.findEmployeeIdByName(eFirstName, eLastName);
+                eID = services.FindEmployeeIdByName(eFirstName, eLastName);
                 if (eID == null)
                 {
                     Console.Clear();
@@ -83,21 +83,19 @@ namespace Presentation
 
             return rd;
         }
-        public Nullable<int> ShipVia()
+        public int ShipVia()
         {
-            Nullable<int> sv;
-            int n;
+            var s = new ShipperServices();            
+            int shipVia;
             do
             {
                 Console.Clear();
                 Console.WriteLine("Enter the ship via: ");
-                int.TryParse(Console.ReadLine(), out n);
+                int.TryParse(Console.ReadLine(), out shipVia);
 
-            } while ((n < 1) || (n > 3));
-
-            sv = n;
-
-            return sv;
+            } while (!s.ValidShipperID(shipVia));
+            
+            return shipVia;
         }
         public Nullable<decimal> positiveOrZeroDecimal()
         {
