@@ -1,2 +1,10 @@
 /.vs/*
+
 /packages/*
+
+/Presentation/bin/*
+/DataAccess/bin/*
+/Services/bin/*
+/Presentation/obj/*
+/DataAccess/obj/*
+/Services/obj/*
