@@ -1,7 +1,6 @@
+.gitignore
 /.vs/*
-
 /packages/*
-
 /Presentation/bin/*
 /DataAccess/bin/*
 /Services/bin/*
