@@ -20,12 +20,16 @@ namespace Presentation
             do
             {
                 Console.Clear();
+                Line();
                 Console.WriteLine("Select your operation: ");
+                Line();
                 Console.WriteLine("1 - Create order.");
                 Console.WriteLine("2 - Read order.");
                 Console.WriteLine("3 - Update order.");
                 Console.WriteLine("4 - Delete order.");
                 Console.WriteLine("5 - Exit.");
+                Line();
+                Console.Write("\n> ");
                 input = Console.ReadLine();
                 Console.Clear();
 
@@ -53,7 +57,10 @@ namespace Presentation
 
             ImportantMessage("¡Hasta luego!");
         }
-
+        private static void ReadOrder()
+        {
+            
+        }
         private static void CreateOrder()
         {
             var getInput = new GetInput();
@@ -85,8 +92,7 @@ namespace Presentation
                 getInput.OrderDetails((int)id);
             }
             //Console.WriteLine($"Orden Id {id} con importe {id} se ha creado correctamente");
-
-            Console.ReadLine();
+            
         }
         private static void ImportantMessage(string text)
         {
@@ -100,6 +106,5 @@ namespace Presentation
         {
             Console.WriteLine("/-----------------------------------------/");
         }
-
     }
 }

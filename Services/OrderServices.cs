@@ -20,10 +20,7 @@ namespace Services
         {
             var order = _orderRepository.Set().FirstOrDefault(o => o.OrderID == id);
 
-            if (order == null)
-                return false;
-
-            return true;
+            return (order != null);
         }
         //Takes an OrderDTO converts it to Order, validates it, and adds it to the database.
         //Returns id on success, null on failure.
@@ -76,6 +73,34 @@ namespace Services
             newOrder.ShipCountry = orderDto.ShipCountry;
 
             return newOrder;
+        }
+        private OrderDTO Find(int id)
+        {
+            var order = _orderRepository.Set().FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+                return null;
+
+            return ConvertOrderToOrderDTO(order);
+        }
+        private OrderDTO ConvertOrderToOrderDTO(Order order)
+        {
+            return new OrderDTO
+            {
+                CustomerID = order.CustomerID,
+                EmployeeID = order.EmployeeID,
+                OrderDate = order.OrderDate,
+                RequiredDate = order.RequiredDate,
+                ShippedDate = order.ShippedDate,
+                ShipVia = order.ShipVia,
+                Freight = order.Freight,
+                ShipName = order.ShipName,
+                ShipAddress = order.ShipAddress,
+                ShipCity = order.ShipCity,
+                ShipRegion = order.ShipRegion,
+                ShipPostalCode = order.ShipPostalCode,
+                ShipCountry = order.ShipCountry
+            };
         }
     }
 }

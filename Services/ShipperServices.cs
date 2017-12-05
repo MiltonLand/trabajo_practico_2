@@ -22,10 +22,7 @@ namespace Services
                 .Set()
                 .FirstOrDefault(s => s.ShipperID == id);
 
-            if (shipper == null)
-                return false;
-
-            return true;
+            return (shipper != null);
         }
     }
 }

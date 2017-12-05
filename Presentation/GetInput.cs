@@ -29,9 +29,8 @@ namespace Presentation
                 input = Console.ReadLine();
 
             } while (input.Count() != 5);
-
-
-            return input.ToUpper();
+            
+            return input;
         }
         public Nullable<int> EmployeeID()
         {
@@ -44,13 +43,9 @@ namespace Presentation
                 eFirstName = this.ValidString("Please enter the employee's first name: ");
                 eLastName = this.ValidString("Please enter the employee's last name: ");
                 eID = services.FindEmployeeIdByName(eFirstName, eLastName);
+
                 if (eID == null)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Employee not found. Try again.");
-                    Line();
-                    Console.ReadLine();
-                }
+                    ImportantMessage("Employee not found. Try again.");
 
             } while (eID == null);
 
@@ -156,6 +151,9 @@ namespace Presentation
                 input = Console.ReadLine().ToUpper();
 
             } while ((input == "Y") || (input != "N"));
+
+            if (firstOrder == true)
+                ImportantMessage("No orders added. ");
         }
         private bool ValidId(int id)
         {
@@ -165,15 +163,17 @@ namespace Presentation
         }
         private float Discount()
         {
-            float discount;
+            int percentage;
 
             do
             {
                 Console.Clear();
                 Console.Write("Enter the discount: ");
-                float.TryParse(Console.ReadLine(), out discount);
+                int.TryParse(Console.ReadLine(), out percentage);
 
-            } while ((discount <= 0) || (discount >= 1));
+            } while ((percentage < 0) || (percentage > 30));
+
+            float discount = percentage / 100;
 
             return discount;
         }

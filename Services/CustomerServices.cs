@@ -18,12 +18,11 @@ namespace Services
 
         public bool ValidCustomerID(string id)
         {
-            var cust = _customerRepository.Set().FirstOrDefault(c => c.CustomerID == id);
+            var cust = _customerRepository
+                .Set()
+                .FirstOrDefault(c => c.CustomerID == id);
 
-            if (cust == null)
-                return false;
-
-            return true;
+            return (cust != null);
         }
     }
 }

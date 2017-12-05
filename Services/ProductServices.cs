@@ -22,9 +22,7 @@ namespace Services
                 .Set()
                 .FirstOrDefault(p => p.ProductName == productName);
 
-            if (product == null)
-                return false;
-            return true;
+            return (product != null);
         }
         public ProductDTO GetProduct(string productName)
         {
