@@ -51,8 +51,7 @@ namespace Presentation
 
             } while (input != "5");
 
-            Console.WriteLine("¡Hasta luego!");
-            Console.ReadLine();
+            ImportantMessage("¡Hasta luego!");
         }
 
         private static void CreateOrder()
