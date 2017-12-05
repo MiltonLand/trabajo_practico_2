@@ -9,16 +9,16 @@ namespace Services
 {
     public class CustomerServices
     {
-        private Repository<Customer> repository;
+        private Repository<Customer> _customerRepository;
 
         public CustomerServices()
         {
-            repository = new Repository<Customer>();
+            _customerRepository = new Repository<Customer>();
         }
 
         public bool ValidCustomerID(string id)
         {
-            var cust = repository.Set().FirstOrDefault(c => c.CustomerID == id);
+            var cust = _customerRepository.Set().FirstOrDefault(c => c.CustomerID == id);
 
             if (cust == null)
                 return false;

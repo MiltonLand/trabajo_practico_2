@@ -61,6 +61,7 @@ namespace Presentation
             string input;
             do
             {
+                Console.Clear();
                 Console.Write(text);
                 input = Console.ReadLine();
 
@@ -83,37 +84,138 @@ namespace Presentation
 
             return rd;
         }
-        public int ShipVia()
+        public int ShipVia(string text)
         {
             var s = new ShipperServices();            
             int shipVia;
             do
             {
                 Console.Clear();
-                Console.WriteLine("Enter the ship via: ");
+                Console.Write(text);
                 int.TryParse(Console.ReadLine(), out shipVia);
 
             } while (!s.ValidShipperID(shipVia));
             
             return shipVia;
         }
-        public Nullable<decimal> positiveOrZeroDecimal()
+        public Nullable<decimal> positiveOrZeroDecimal(string text)
         {
             Nullable<decimal> fr;
-            decimal f;
+            decimal n;
             do
             {
                 Console.Clear();
-                Console.WriteLine("Enter the freight: ");
-                decimal.TryParse(Console.ReadLine(), out f);
+                Console.Write(text);
+                decimal.TryParse(Console.ReadLine(), out n);
 
-            } while (f < 0);
+            } while (n < 0);
 
-            fr = f;
+            fr = n;
 
             return fr;
         }
-        public static void Line()
+        public void OrderDetails(int id)
+        {
+            if (!ValidId(id)) return;
+
+            var orderDetailServices = new OrderDetailServices();
+
+            string input = "";
+            bool firstOrder = true;
+            do
+            {
+                if (input == "Y")
+                {
+                    ProductDTO product = this.GetProductByName();
+
+                    short quantity = this.Quantity();
+
+                    if (quantity >= product.UnitsInStock)
+                        quantity = (short)product.UnitsInStock;
+
+                    orderDetailServices.Create(new OrderDetailDTO
+                    {
+                        OrderID = id,
+                        ProductID = product.ProductID,
+                        UnitPrice = (decimal)product.UnitPrice,
+                        Quantity = quantity,
+                        Discount = this.Discount()
+                    });
+
+                    firstOrder = false;
+
+                    ImportantMessage("Order Added. ");
+                }
+
+                Console.Clear();
+                if (firstOrder)
+                    Console.Write("Enter order? (Y/N) ");
+                else
+                    Console.WriteLine("Enter another order? (Y/N) ");
+
+                input = Console.ReadLine().ToUpper();
+
+            } while ((input == "Y") || (input != "N"));
+        }
+
+        private bool ValidId(int id)
+        {
+            var orderServices = new OrderServices();
+
+            return orderServices.ValidId(id);
+        }
+        private float Discount()
+        {
+            float discount;
+
+            do
+            {
+                Console.Clear();
+                Console.Write("Enter the discount: ");
+                float.TryParse(Console.ReadLine(), out discount);
+
+            } while ((discount <= 0) || (discount >= 1));
+
+            return discount;
+        }
+        private ProductDTO GetProductByName()
+        {
+            var productServices = new ProductServices();
+            ProductDTO product;
+            string name;
+            
+            do
+            {
+                name = this.ValidString("Enter the product's name: ");
+                product = productServices.GetProduct(name);
+
+            } while (product == null);
+
+
+            return product;
+        }
+        private short Quantity()
+        {
+            short quantity;
+
+            do
+            {
+                Console.Clear();
+                Console.Write("Enter the quantity: ");
+                short.TryParse(Console.ReadLine(), out quantity);
+            } while (quantity <= 0);
+
+            return quantity;
+        }
+        private void ImportantMessage(string text)
+        {
+            Console.Clear();
+            Line();
+            Console.WriteLine("| " + text);
+            Line();
+            Console.ReadLine();
+        }
+        private void Line()
         {
             Console.WriteLine("/-----------------------------------------/");
         }

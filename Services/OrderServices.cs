@@ -9,22 +9,32 @@ namespace Services
 {
     public class OrderServices
     {
-        private Repository<Order> repository;
+        private Repository<Order> _orderRepository;
 
         public OrderServices()
         {
-            repository = new Repository<Order>();
+            _orderRepository = new Repository<Order>();
+        }
+
+        public bool ValidId(int id)
+        {
+            var order = _orderRepository.Set().FirstOrDefault(o => o.OrderID == id);
+
+            if (order == null)
+                return false;
+
+            return true;
         }
         //Takes an OrderDTO converts it to Order, validates it, and adds it to the database.
         //Returns id on success, null on failure.
-        public Nullable<int> AddNewOrder(OrderDTO orderDto)
+        public Nullable<int> Create(OrderDTO orderDto)
         {
             if (!ValidOrder(orderDto)) return null;
 
             var order = ConvertOrderDTO(orderDto);
 
-            order = repository.Persist(order);
-            repository.SaveChanges();
+            order = _orderRepository.Persist(order);
+            _orderRepository.SaveChanges();
 
             return order.OrderID;
         }
@@ -45,7 +55,6 @@ namespace Services
             if (orderDto.ShipPostalCode.Count() > 10) return false;
             if (orderDto.ShipCountry.Count() > 15) return false;
 
-
             return true;
         }
         private Order ConvertOrderDTO(OrderDTO orderDto)
@@ -57,6 +66,7 @@ namespace Services
             newOrder.OrderDate = orderDto.OrderDate;
             newOrder.RequiredDate = orderDto.RequiredDate;
             newOrder.ShippedDate = orderDto.ShippedDate;
+            newOrder.ShipVia = orderDto.ShipVia;
             newOrder.Freight = orderDto.Freight;
             newOrder.ShipName = orderDto.ShipName;
             newOrder.ShipAddress = orderDto.ShipAddress;

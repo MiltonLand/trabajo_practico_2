@@ -73,17 +73,34 @@ namespace Presentation
             newOrderDTO.ShipRegion = getInput.ValidString("Please enter the ship region: ", 15);
             newOrderDTO.ShipPostalCode = getInput.ValidString("Please enter the ship postal code: ", 10);
             newOrderDTO.ShipCountry = getInput.ValidString("Please enter the ship country: ", 15);
-
+            
             var orderServices = new OrderServices();
 
-            Nullable<int> id = orderServices.AddNewOrder(newOrderDTO);
+            Nullable<int> id = orderServices.Create(newOrderDTO);
+
 
             if (id == null)
-                Console.WriteLine("Oops, something went wrong!");
+                ImportantMessage("Something went wrong!");
             else
-                Console.WriteLine($"Orden Id {id} con importe {id} se ha creado correctamente");
+            {
+                getInput.OrderDetails((int)id);
+            }
+            //Console.WriteLine($"Orden Id {id} con importe {id} se ha creado correctamente");
 
             Console.ReadLine();
         }
+        private static void ImportantMessage(string text)
+        {
+            Console.Clear();
+            Line();
+            Console.WriteLine(text);
+            Line();
+            Console.ReadLine();
+        }
+        private static void Line()
+        {
+            Console.WriteLine("/-----------------------------------------/");
+        }
+
     }
 }
