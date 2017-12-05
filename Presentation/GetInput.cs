@@ -155,6 +155,34 @@ namespace Presentation
             if (firstOrder == true)
                 ImportantMessage("No orders added. ");
         }
+        public int OrderID()
+        {
+            var oServices = new OrderServices();
+
+            int id;
+
+            do
+            {
+                id = GetOrderID();
+
+            } while (!oServices.ValidId(id));
+
+            return id;
+        }
+        public int GetOrderID()
+        {
+            int id;
+
+            do
+            {
+                Console.Clear();
+                Console.Write("Enter the order ID: ");
+                int.TryParse(Console.ReadLine(), out id);
+
+            } while (id <= 0);
+
+            return id;
+        }
         private bool ValidId(int id)
         {
             var orderServices = new OrderServices();
@@ -163,13 +191,13 @@ namespace Presentation
         }
         private float Discount()
         {
-            int percentage;
+            float percentage;
 
             do
             {
                 Console.Clear();
                 Console.Write("Enter the discount: ");
-                int.TryParse(Console.ReadLine(), out percentage);
+                float.TryParse(Console.ReadLine(), out percentage);
 
             } while ((percentage < 0) || (percentage > 30));
 

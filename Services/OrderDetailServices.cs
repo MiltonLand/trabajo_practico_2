@@ -15,7 +15,38 @@ namespace Services
         {
             _orderDetailRepository = new Repository<Order_Detail>();
         }
+        public List<OrderDetailDTO> GetDetailByID(int orderID)
+        {
+            var orderDetails = _orderDetailRepository.Set().Where(o => o.OrderID == orderID);
 
+            var list = new List<OrderDetailDTO>() { };
+            foreach (var od in orderDetails)
+            {
+                list.Add(ConvertToDTO(od));
+            }
+
+            return list;
+        }
+        public decimal CalculatePrice(int id)
+        {
+            decimal total = 0;
+            decimal subtotal;
+            decimal discount;
+            
+            var orderDetails = _orderDetailRepository.Set().Where(od => od.OrderID == id);
+
+            if (orderDetails == null) return 0;
+
+            foreach (var od in orderDetails)
+            {
+                subtotal = od.UnitPrice * od.Quantity;
+                discount = subtotal * (decimal)od.Discount;
+                subtotal -= discount;
+                total += subtotal;
+            }
+
+            return total;
+        }
         public void Create(OrderDetailDTO orderDetailDto)
         {
             _orderDetailRepository.Persist(ConvertToOrderDetail(orderDetailDto));
@@ -32,6 +63,18 @@ namespace Services
             orderDetail.Discount = dto.Discount;
 
             return orderDetail;
+        }
+        private OrderDetailDTO ConvertToDTO(Order_Detail od)
+        {
+            var orderDetailDTO = new OrderDetailDTO();
+
+            orderDetailDTO.OrderID = od.OrderID;
+            orderDetailDTO.ProductID = od.ProductID;
+            orderDetailDTO.UnitPrice = od.UnitPrice;
+            orderDetailDTO.Quantity = od.Quantity;
+            orderDetailDTO.Discount = od.Discount;
+
+            return orderDetailDTO;
         }
     }
 }

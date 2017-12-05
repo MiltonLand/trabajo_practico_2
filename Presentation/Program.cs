@@ -21,13 +21,13 @@ namespace Presentation
             {
                 Console.Clear();
                 Line();
-                Console.WriteLine("Select your operation: ");
+                Console.WriteLine("| Select your operation:                  |");
                 Line();
-                Console.WriteLine("1 - Create order.");
-                Console.WriteLine("2 - Read order.");
-                Console.WriteLine("3 - Update order.");
-                Console.WriteLine("4 - Delete order.");
-                Console.WriteLine("5 - Exit.");
+                Console.WriteLine("| 1 - Create order.                       |");
+                Console.WriteLine("| 2 - Read order.                         |");
+                Console.WriteLine("| 3 - Update order.                       |");
+                Console.WriteLine("| 4 - Delete order.                       |");
+                Console.WriteLine("| 5 - Exit.                               |");
                 Line();
                 Console.Write("\n> ");
                 input = Console.ReadLine();
@@ -39,7 +39,7 @@ namespace Presentation
                         CreateOrder();
                         break;
                     case "2":
-                        //ReadOrder();
+                        ReadOrder();
                         break;
                     case "3":
                         //UpdateOrder();
@@ -55,11 +55,33 @@ namespace Presentation
 
             } while (input != "5");
 
-            ImportantMessage("¡Hasta luego!");
+            ImportantMessage("| Goodbye!                                |");
         }
         private static void ReadOrder()
         {
-            
+            var getInput = new GetInput();
+            var getOutput = new GetOutput();
+
+            int id = getInput.OrderID();
+            var order = getOutput.GetOrderByID(id);
+            //var orderDetails = getOutput.GetOrderDetailsByID(id);
+
+            Console.Clear();
+            Line();
+            Console.WriteLine($"| Customer ID: {order.CustomerID}");
+            Console.WriteLine($"| Employee ID: {order.EmployeeID}");
+            Console.WriteLine($"| Order Date: {order.OrderDate}");
+            Console.WriteLine($"| Required Date: {order.RequiredDate}");
+            Console.WriteLine($"| Shipped Date: {order.ShippedDate}");
+            Console.WriteLine($"| Ship Via: {order.ShipVia}");
+            Console.WriteLine($"| Freight: {order.Freight}");
+            Console.WriteLine($"| Ship Name: {order.ShipName}");
+            Console.WriteLine($"| Ship Address: {order.ShipAddress}");
+            Console.WriteLine($"| Ship City: {order.ShipCity}");
+            Console.WriteLine($"| Ship Region: {order.ShipRegion}");
+            Console.WriteLine($"| Ship Postal Code: {order.ShipPostalCode}");
+            Console.WriteLine($"| Ship Country: {order.ShipCountry}");
+            ImportantMessage("| Press any key to continue...            |");
         }
         private static void CreateOrder()
         {
@@ -82,21 +104,17 @@ namespace Presentation
             
             var orderServices = new OrderServices();
 
-            Nullable<int> id = orderServices.Create(newOrderDTO);
+            newOrderDTO.OrderID = orderServices.Create(newOrderDTO);
 
+            getInput.OrderDetails(newOrderDTO.OrderID);
 
-            if (id == null)
-                ImportantMessage("Something went wrong!");
-            else
-            {
-                getInput.OrderDetails((int)id);
-            }
-            //Console.WriteLine($"Orden Id {id} con importe {id} se ha creado correctamente");
+            var getOutput = new GetOutput();
+            var amount = getOutput.CalculatePrice(newOrderDTO);
+            ImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {amount} se ha creado correctamente");
             
         }
         private static void ImportantMessage(string text)
         {
-            Console.Clear();
             Line();
             Console.WriteLine(text);
             Line();
@@ -104,7 +122,7 @@ namespace Presentation
         }
         private static void Line()
         {
-            Console.WriteLine("/-----------------------------------------/");
+            Console.WriteLine("+-----------------------------------------+");
         }
     }
 }
