@@ -88,6 +88,7 @@ namespace Services
         {
             return new OrderDTO
             {
+                OrderID = order.OrderID,
                 CustomerID = order.CustomerID,
                 EmployeeID = order.EmployeeID,
                 OrderDate = order.OrderDate,

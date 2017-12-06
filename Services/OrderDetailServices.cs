@@ -27,7 +27,18 @@ namespace Services
 
             return list;
         }
-        public decimal CalculatePrice(int id)
+        public decimal Subtotal(OrderDetailDTO od)
+        {
+            decimal subtotal = 0;
+            decimal discount;
+
+            subtotal = od.UnitPrice * od.Quantity;
+            discount = subtotal * (decimal)od.Discount;
+            subtotal -= discount;
+
+            return subtotal;
+        }
+        public decimal Total(int id)
         {
             decimal total = 0;
             decimal subtotal;

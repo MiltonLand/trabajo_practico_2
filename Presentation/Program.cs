@@ -29,8 +29,7 @@ namespace Presentation
                 MessageInsideBox("4 - Delete order.");
                 MessageInsideBox("5 - Exit.");
                 Line();
-                Console.Write("\n> ");
-                input = Console.ReadLine();
+                input = StandBy();
                 Console.Clear();
 
                 switch (input)
@@ -42,7 +41,9 @@ namespace Presentation
                         ReadOrder();
                         break;
                     case "3":
-                        //UpdateOrder();
+                        Console.WriteLine("entering");
+                        Console.ReadLine();
+                        UpdateOrder();
                         break;
                     case "4":
                         //DeleteOrder();
@@ -57,6 +58,40 @@ namespace Presentation
 
             ImportantMessage("Goodbye!");
         }
+
+        private static void UpdateOrder()
+        {
+            Console.WriteLine("Hol");
+
+            Console.ReadLine();
+            var getInput = new GetInput();
+            
+            int id = getInput.OrderID();
+
+            Line();
+            MessageInsideBox("Select the field you want to update: ");
+            Line();
+            MessageInsideBox("1 - Customer ID.");
+            MessageInsideBox("2 - Employee ID.");
+            MessageInsideBox("3 - Order Date.");
+            MessageInsideBox("4 - Required Date.");
+            MessageInsideBox("5 - Shipped Date.");
+            MessageInsideBox("6 - Ship Via.");
+            MessageInsideBox("7 - Freight.");
+            MessageInsideBox("8 - Ship Name.");
+            MessageInsideBox("9 - Ship Address.");
+            MessageInsideBox("10 - Ship City.");
+            MessageInsideBox("11 - Ship Region.");
+            MessageInsideBox("12 - Ship Postal Code.");
+            MessageInsideBox("13 - Ship Country.");
+            MessageInsideBox("14 - Edit all fields.");
+            MessageInsideBox("15 - Exit.");
+            Line();
+            string input = StandBy();
+            Console.ReadLine();
+
+        }
+
         private static void ReadOrder()
         {
             var getInput = new GetInput();
@@ -66,7 +101,12 @@ namespace Presentation
             var order = getOutput.GetOrderByID(id);
             var orderDetails = getOutput.GetOrderDetailsByID(id);
 
+            if ((order == null) || (orderDetails == null))
+                ReallyImportantMessage("Error.");
+
             Console.Clear();
+            Line();
+            MessageInsideBox($"Order Nro. {id}");
             Line();
             MessageInsideBox($"Customer ID: {order.CustomerID}");
             MessageInsideBox($"Employee ID: {order.EmployeeID}");
@@ -74,28 +114,32 @@ namespace Presentation
             MessageInsideBox($"Required Date: {order.RequiredDate}");
             MessageInsideBox($"Shipped Date: {order.ShippedDate}");
             MessageInsideBox($"Ship Via: {order.ShipVia}");
-            MessageInsideBox($"Freight: {order.Freight}");
+            MessageInsideBox($"Freight: {String.Format("{0:0.00}", order.Freight)}");
             MessageInsideBox($"Ship Name: {order.ShipName}");
             MessageInsideBox($"Ship Address: {order.ShipAddress}");
             MessageInsideBox($"Ship City: {order.ShipCity}");
             MessageInsideBox($"Ship Region: {order.ShipRegion}");
             MessageInsideBox($"Ship Postal Code: {order.ShipPostalCode}");
             MessageInsideBox($"Ship Country: {order.ShipCountry}");
-
-
+            
             var productServices = new ProductServices();
 
             int count = 0;
+
             foreach (var od in orderDetails)
             {
                 count++;
                 Line();
                 MessageInsideBox($"Bill Nro. {count}");
+                Line();
                 MessageInsideBox($"Product: {productServices.GetProductNameById(od.ProductID)}");
                 MessageInsideBox($"Unit price: {String.Format("{0:0.00}", od.UnitPrice)}");
                 MessageInsideBox($"Quantity: {od.Quantity}");
                 MessageInsideBox($"Discount: {od.Discount}");
+                MessageInsideBox($"Subtotal: {String.Format("{0:0.00}", getOutput.Subtotal(od))}");
             }
+            Line();
+            MessageInsideBox($"Total(with freight): {String.Format("{0:0.00}", getOutput.Total(order))}");
 
             ImportantMessage("Press any key to continue...");
         }
@@ -125,7 +169,7 @@ namespace Presentation
             getInput.OrderDetails(newOrderDTO.OrderID);
 
             var getOutput = new GetOutput();
-            var amount = getOutput.CalculatePrice(newOrderDTO);
+            var amount = getOutput.Total(newOrderDTO);
             ReallyImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {String.Format("{0:0.00}", amount)} se ha creado correctamente.");
         }
         private static void ReallyImportantMessage(string text, int lineLength = 66)
@@ -138,7 +182,13 @@ namespace Presentation
             Line();
             MessageInsideBox(text);
             Line();
-            Console.ReadLine();
+            StandBy();
+        }
+        private static string StandBy()
+        {
+            Console.Write("\n > asdasdsda");
+            Console.WriteLine("asdsdads");
+            return Console.ReadLine();
         }
         private static void MessageInsideBox(string text, int lineLength = 66)
         {

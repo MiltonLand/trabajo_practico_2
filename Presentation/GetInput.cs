@@ -169,7 +169,7 @@ namespace Presentation
 
             return id;
         }
-        public int GetOrderID()
+        private int GetOrderID()
         {
             int id;
 

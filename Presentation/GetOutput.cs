@@ -17,13 +17,19 @@ namespace Presentation
 
             return orderDto;
         }
-        public decimal CalculatePrice(OrderDTO orderDto)
+        public decimal Subtotal(OrderDetailDTO od)
+        {
+            var orderDetailServices = new OrderDetailServices();
+
+            return orderDetailServices.Subtotal(od);
+        }
+        public decimal Total(OrderDTO orderDto)
         {
             var orderDetailServices = new OrderDetailServices();
 
             decimal total = (decimal)orderDto.Freight;
 
-            total += orderDetailServices.CalculatePrice(orderDto.OrderID);
+            total += orderDetailServices.Total(orderDto.OrderID);
 
             return total;
         }
