@@ -234,7 +234,7 @@ namespace Presentation
 
             return quantity;
         }
-        private void ImportantMessage(string text)
+        private static void ImportantMessage(string text)
         {
             Console.Clear();
             Line();
@@ -242,9 +242,9 @@ namespace Presentation
             Line();
             Console.ReadLine();
         }
-        private void Line()
+        private static void Line()
         {
-            Console.WriteLine("/-----------------------------------------/");
+            Console.WriteLine("+----------------------------------------------------------------+");
         }
     }
     

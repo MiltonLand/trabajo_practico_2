@@ -41,5 +41,11 @@ namespace Services
                 UnitsInStock = product.UnitsInStock
             };
         }
+        public string GetProductNameById(int id)
+        {
+            var product = _productRepository.Set().FirstOrDefault(p => p.ProductID == id);
+
+            return product.ProductName;
+        }
     }
 }

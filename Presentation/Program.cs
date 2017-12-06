@@ -21,13 +21,13 @@ namespace Presentation
             {
                 Console.Clear();
                 Line();
-                Console.WriteLine("| Select your operation:                  |");
+                MessageInsideBox("Select your operation:");
                 Line();
-                Console.WriteLine("| 1 - Create order.                       |");
-                Console.WriteLine("| 2 - Read order.                         |");
-                Console.WriteLine("| 3 - Update order.                       |");
-                Console.WriteLine("| 4 - Delete order.                       |");
-                Console.WriteLine("| 5 - Exit.                               |");
+                MessageInsideBox("1 - Create order.");
+                MessageInsideBox("2 - Read order.");
+                MessageInsideBox("3 - Update order.");
+                MessageInsideBox("4 - Delete order.");
+                MessageInsideBox("5 - Exit.");
                 Line();
                 Console.Write("\n> ");
                 input = Console.ReadLine();
@@ -55,7 +55,7 @@ namespace Presentation
 
             } while (input != "5");
 
-            ImportantMessage("| Goodbye!                                |");
+            ImportantMessage("Goodbye!");
         }
         private static void ReadOrder()
         {
@@ -64,24 +64,40 @@ namespace Presentation
 
             int id = getInput.OrderID();
             var order = getOutput.GetOrderByID(id);
-            //var orderDetails = getOutput.GetOrderDetailsByID(id);
+            var orderDetails = getOutput.GetOrderDetailsByID(id);
 
             Console.Clear();
             Line();
-            Console.WriteLine($"| Customer ID: {order.CustomerID}");
-            Console.WriteLine($"| Employee ID: {order.EmployeeID}");
-            Console.WriteLine($"| Order Date: {order.OrderDate}");
-            Console.WriteLine($"| Required Date: {order.RequiredDate}");
-            Console.WriteLine($"| Shipped Date: {order.ShippedDate}");
-            Console.WriteLine($"| Ship Via: {order.ShipVia}");
-            Console.WriteLine($"| Freight: {order.Freight}");
-            Console.WriteLine($"| Ship Name: {order.ShipName}");
-            Console.WriteLine($"| Ship Address: {order.ShipAddress}");
-            Console.WriteLine($"| Ship City: {order.ShipCity}");
-            Console.WriteLine($"| Ship Region: {order.ShipRegion}");
-            Console.WriteLine($"| Ship Postal Code: {order.ShipPostalCode}");
-            Console.WriteLine($"| Ship Country: {order.ShipCountry}");
-            ImportantMessage("| Press any key to continue...            |");
+            MessageInsideBox($"Customer ID: {order.CustomerID}");
+            MessageInsideBox($"Employee ID: {order.EmployeeID}");
+            MessageInsideBox($"Order Date: {order.OrderDate}");
+            MessageInsideBox($"Required Date: {order.RequiredDate}");
+            MessageInsideBox($"Shipped Date: {order.ShippedDate}");
+            MessageInsideBox($"Ship Via: {order.ShipVia}");
+            MessageInsideBox($"Freight: {order.Freight}");
+            MessageInsideBox($"Ship Name: {order.ShipName}");
+            MessageInsideBox($"Ship Address: {order.ShipAddress}");
+            MessageInsideBox($"Ship City: {order.ShipCity}");
+            MessageInsideBox($"Ship Region: {order.ShipRegion}");
+            MessageInsideBox($"Ship Postal Code: {order.ShipPostalCode}");
+            MessageInsideBox($"Ship Country: {order.ShipCountry}");
+
+
+            var productServices = new ProductServices();
+
+            int count = 0;
+            foreach (var od in orderDetails)
+            {
+                count++;
+                Line();
+                MessageInsideBox($"Bill Nro. {count}");
+                MessageInsideBox($"Product: {productServices.GetProductNameById(od.ProductID)}");
+                MessageInsideBox($"Unit price: {String.Format("{0:0.00}", od.UnitPrice)}");
+                MessageInsideBox($"Quantity: {od.Quantity}");
+                MessageInsideBox($"Discount: {od.Discount}");
+            }
+
+            ImportantMessage("Press any key to continue...");
         }
         private static void CreateOrder()
         {
@@ -110,19 +126,37 @@ namespace Presentation
 
             var getOutput = new GetOutput();
             var amount = getOutput.CalculatePrice(newOrderDTO);
-            ImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {amount} se ha creado correctamente");
-            
+            ReallyImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {String.Format("{0:0.00}", amount)} se ha creado correctamente.");
         }
-        private static void ImportantMessage(string text)
+        private static void ReallyImportantMessage(string text, int lineLength = 66)
+        {
+            Console.Clear();
+            ImportantMessage(text);
+        }
+        private static void ImportantMessage(string text, int lineLength = 66)
         {
             Line();
-            Console.WriteLine(text);
+            MessageInsideBox(text);
             Line();
             Console.ReadLine();
         }
+        private static void MessageInsideBox(string text, int lineLength = 66)
+        {
+            int length = text.Count();
+            lineLength -= 2;
+            if (length < lineLength)
+            {
+                Console.Write("| " + text);
+                for (int i = 0; i < lineLength - length - 1; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine("|");
+            }
+        }
         private static void Line()
         {
-            Console.WriteLine("+-----------------------------------------+");
+            Console.WriteLine("+----------------------------------------------------------------+");
         }
     }
 }
