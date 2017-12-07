@@ -88,8 +88,11 @@ namespace Presentation
             if (input == "Y")
             {
                 var orderServices = new OrderServices();
-                orderServices.Delete(orderDto);
-                ReallyImportantMessage("Order deleted.");
+                bool success = orderServices.Delete(orderDto);
+                if (success)
+                    ReallyImportantMessage("Order deleted.");
+                else
+                    ReallyImportantMessage("Deletion failed. Can't delete an order from Mexico or France.");
             }
             else
             {

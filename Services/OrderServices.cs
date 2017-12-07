@@ -68,14 +68,25 @@ namespace Services
 
             _orderRepository.SaveChanges();
         }
-        public void Delete(OrderDTO orderDto)
+        //Deletes an order. Returns true if it succeeds.
+        public bool Delete(OrderDTO orderDto)
         {
             var order = _orderRepository
                 .Set()
                 .FirstOrDefault(o => o.OrderID == orderDto.OrderID);
 
-            _orderRepository.Remove(order);
-            _orderRepository.SaveChanges();
+            if ((order.Customer.Country != "Mexico") && (order.Customer.Country != "France"))
+            {
+                var orderDetailServices = new OrderDetailServices();
+
+                orderDetailServices.DeleteByOrderID(order.OrderID);
+
+                _orderRepository.Remove(order);
+                _orderRepository.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
         private bool ValidOrder(OrderDTO orderDto)
         {

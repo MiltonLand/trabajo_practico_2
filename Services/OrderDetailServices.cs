@@ -15,6 +15,7 @@ namespace Services
         {
             _orderDetailRepository = new Repository<Order_Detail>();
         }
+        
         public List<OrderDetailDTO> GetDetailByID(int orderID)
         {
             var orderDetails = _orderDetailRepository.Set().Where(o => o.OrderID == orderID);
@@ -61,6 +62,20 @@ namespace Services
         public void Create(OrderDetailDTO orderDetailDto)
         {
             _orderDetailRepository.Persist(ConvertToOrderDetail(orderDetailDto));
+            _orderDetailRepository.SaveChanges();
+        }
+        public void DeleteByOrderID(int orderID)
+        {
+            var oDetails = _orderDetailRepository.Set().Where(o => o.OrderID == orderID);
+
+            if (oDetails == null)
+                return;
+
+            foreach (var od in oDetails)
+            {
+                _orderDetailRepository.Remove(od);
+            }
+
             _orderDetailRepository.SaveChanges();
         }
         private Order_Detail ConvertToOrderDetail(OrderDetailDTO dto)
