@@ -41,8 +41,6 @@ namespace Presentation
                         ReadOrder();
                         break;
                     case "3":
-                        Console.WriteLine("entering");
-                        Console.ReadLine();
                         UpdateOrder();
                         break;
                     case "4":
@@ -51,6 +49,7 @@ namespace Presentation
                     case "5":
                         break;
                     default:
+                        ReallyImportantMessage("Invalid operation. ");
                         break;
                 }
 
@@ -61,37 +60,108 @@ namespace Presentation
 
         private static void UpdateOrder()
         {
-            Console.WriteLine("Hol");
-
-            Console.ReadLine();
             var getInput = new GetInput();
+            var getOutput = new GetOutput();
             
             int id = getInput.OrderID();
+            var orderDto = getOutput.GetOrderByID(id);
 
-            Line();
-            MessageInsideBox("Select the field you want to update: ");
-            Line();
-            MessageInsideBox("1 - Customer ID.");
-            MessageInsideBox("2 - Employee ID.");
-            MessageInsideBox("3 - Order Date.");
-            MessageInsideBox("4 - Required Date.");
-            MessageInsideBox("5 - Shipped Date.");
-            MessageInsideBox("6 - Ship Via.");
-            MessageInsideBox("7 - Freight.");
-            MessageInsideBox("8 - Ship Name.");
-            MessageInsideBox("9 - Ship Address.");
-            MessageInsideBox("10 - Ship City.");
-            MessageInsideBox("11 - Ship Region.");
-            MessageInsideBox("12 - Ship Postal Code.");
-            MessageInsideBox("13 - Ship Country.");
-            MessageInsideBox("14 - Edit all fields.");
-            MessageInsideBox("15 - Exit.");
-            Line();
-            string input = StandBy();
-            Console.ReadLine();
+            string input;
 
+            do
+            {
+                Console.Clear();
+                Line();
+                MessageInsideBox("Select the field you want to update: ");
+                Line();
+                MessageInsideBox($"1 - Customer ID: {orderDto.CustomerID}");
+                MessageInsideBox($"2 - Employee ID: {orderDto.EmployeeID}");
+                MessageInsideBox($"3 - Order Date: {orderDto.OrderDate}");
+                MessageInsideBox($"4 - Required Date: {orderDto.RequiredDate}");
+                MessageInsideBox($"5 - Shipped Date: {orderDto.ShippedDate}");
+                MessageInsideBox($"6 - Ship Via: {orderDto.ShipVia}");
+                MessageInsideBox($"7 - Freight: {String.Format("{0:0.00}", orderDto.Freight)}");
+                MessageInsideBox($"8 - Ship Name: {orderDto.ShipName}");
+                MessageInsideBox($"9 - Ship Address: {orderDto.ShipAddress}");
+                MessageInsideBox($"10 - Ship City: {orderDto.ShipCity}");
+                MessageInsideBox($"11 - Ship Region: {orderDto.ShipRegion}");
+                MessageInsideBox($"12 - Ship Postal Code: {orderDto.ShipPostalCode}");
+                MessageInsideBox($"13 - Ship Country: {orderDto.ShipCountry}");
+                MessageInsideBox("14 - Edit all fields.");
+                MessageInsideBox("15 - Save changes.");
+                MessageInsideBox("16 - Go back.");
+                Line();
+                input = StandBy();
+
+                switch (input)
+                {
+                    case "1":
+                        orderDto.CustomerID = getInput.CustomerID("Enter the new customed ID: ");
+                        break;
+                    case "2":
+                        orderDto.EmployeeID = getInput.EmployeeID();
+                        break;
+                    case "3":
+                        orderDto.OrderDate = getInput.Date("Enter the new order date: ");
+                        break;
+                    case "4":
+                        orderDto.RequiredDate = getInput.Date("Enter the new required date: ");
+                        break;
+                    case "5":
+                        orderDto.ShippedDate = getInput.Date("Enter the new shipped date: ");
+                        break;
+                    case "6":
+                        orderDto.ShipVia = getInput.ShipVia("Enter the new ship via: ");
+                        break;
+                    case "7":
+                        orderDto.Freight = getInput.PositiveOrZeroDecimal("Enter the new freight: ");
+                        break;
+                    case "8":
+                        orderDto.ShipName = getInput.ValidString("Enter the new ship name: ", 40);
+                        break;
+                    case "9":
+                        orderDto.ShipAddress = getInput.ValidString("Enter the new ship address: ", 60);
+                        break;
+                    case "10":
+                        orderDto.ShipCity = getInput.ValidString("Enter the new ship city: ", 15);
+                        break;
+                    case "11":
+                        orderDto.ShipRegion = getInput.ValidString("Enter the new ship region: ", 15);
+                        break;
+                    case "12":
+                        orderDto.ShipPostalCode = getInput.ValidString("Enter the new ship postal code: ", 10);
+                        break;
+                    case "13":
+                        orderDto.ShipCountry = getInput.ValidString("Enter the new ship country: ", 15);
+                        break;
+                    case "14":
+                        orderDto.CustomerID = getInput.CustomerID("Enter the new customed ID: ");
+                        orderDto.EmployeeID = getInput.EmployeeID();
+                        orderDto.OrderDate = getInput.Date("Enter the new order date: ");
+                        orderDto.RequiredDate = getInput.Date("Enter the new required date: ");
+                        orderDto.ShippedDate = getInput.Date("Enter the new shipped date: ");
+                        orderDto.ShipVia = getInput.ShipVia("Enter the new ship via: ");
+                        orderDto.Freight = getInput.PositiveOrZeroDecimal("Enter the new freight: ");
+                        orderDto.ShipName = getInput.ValidString("Enter the new ship name: ", 40);
+                        orderDto.ShipAddress = getInput.ValidString("Enter the new ship address: ", 60);
+                        orderDto.ShipCity = getInput.ValidString("Enter the new ship city: ", 15);
+                        orderDto.ShipRegion = getInput.ValidString("Enter the new ship region: ", 15);
+                        orderDto.ShipPostalCode = getInput.ValidString("Enter the new ship postal code: ", 10);
+                        orderDto.ShipCountry = getInput.ValidString("Enter the new ship country: ", 15);
+                        break;
+                    case "15":
+                        var orderServices = new OrderServices();
+                        orderServices.Update(orderDto);
+                        ReallyImportantMessage("Changes saved");
+                        break;
+                    case "16":
+                        break;
+                    default:
+                        ReallyImportantMessage("Invalid field. ");
+                        break;
+                }
+            } while ((input != "15") && (input != "16"));
         }
-
         private static void ReadOrder()
         {
             var getInput = new GetInput();
@@ -146,21 +216,22 @@ namespace Presentation
         private static void CreateOrder()
         {
             var getInput = new GetInput();
-            var newOrderDTO = new OrderDTO();
-
-            newOrderDTO.CustomerID = getInput.CustomerID("Please enter the customer ID: "); ;
-            newOrderDTO.EmployeeID = getInput.EmployeeID();
-            newOrderDTO.OrderDate = getInput.Date("Please enter the order date: ");
-            newOrderDTO.RequiredDate = getInput.Date("Please enter the required date: ");
-            newOrderDTO.ShippedDate = getInput.Date("Please enter the shipped date: ");
-            newOrderDTO.ShipVia = getInput.ShipVia("Please enter the ship via: ");
-            newOrderDTO.Freight = getInput.positiveOrZeroDecimal("Please enter the freight: ");
-            newOrderDTO.ShipName = getInput.ValidString("Please enter the ship name: ", 40);
-            newOrderDTO.ShipAddress = getInput.ValidString("Please enter the ship address: ", 60);
-            newOrderDTO.ShipCity = getInput.ValidString("Please enter the ship city: ", 15);
-            newOrderDTO.ShipRegion = getInput.ValidString("Please enter the ship region: ", 15);
-            newOrderDTO.ShipPostalCode = getInput.ValidString("Please enter the ship postal code: ", 10);
-            newOrderDTO.ShipCountry = getInput.ValidString("Please enter the ship country: ", 15);
+            var newOrderDTO = new OrderDTO
+            {
+                CustomerID = getInput.CustomerID("Please enter the customer ID: "),
+                EmployeeID = getInput.EmployeeID(),
+                OrderDate = getInput.Date("Please enter the order date: "),
+                RequiredDate = getInput.Date("Please enter the required date: "),
+                ShippedDate = getInput.Date("Please enter the shipped date: "),
+                ShipVia = getInput.ShipVia("Please enter the ship via: "),
+                Freight = getInput.PositiveOrZeroDecimal("Please enter the freight: "),
+                ShipName = getInput.ValidString("Please enter the ship name: ", 40),
+                ShipAddress = getInput.ValidString("Please enter the ship address: ", 60),
+                ShipCity = getInput.ValidString("Please enter the ship city: ", 15),
+                ShipRegion = getInput.ValidString("Please enter the ship region: ", 15),
+                ShipPostalCode = getInput.ValidString("Please enter the ship postal code: ", 10),
+                ShipCountry = getInput.ValidString("Please enter the ship country: ", 15),
+            };
             
             var orderServices = new OrderServices();
 
@@ -186,8 +257,7 @@ namespace Presentation
         }
         private static string StandBy()
         {
-            Console.Write("\n > asdasdsda");
-            Console.WriteLine("asdsdads");
+            Console.Write("\n > ");
             return Console.ReadLine();
         }
         private static void MessageInsideBox(string text, int lineLength = 66)

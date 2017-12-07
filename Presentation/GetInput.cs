@@ -20,7 +20,7 @@ namespace Presentation
 
             return id;
         }
-        public string GetCustomerID(string text)
+        private string GetCustomerID(string text)
         {
             string input;
             do
@@ -32,9 +32,9 @@ namespace Presentation
             
             return input;
         }
-        public Nullable<int> EmployeeID()
+        public int? EmployeeID()
         {
-            Nullable<int> eID;
+            int? eID;
             var services = new EmployeeServices();
             string eFirstName;
             string eLastName;
@@ -64,7 +64,7 @@ namespace Presentation
 
             return input;
         }
-        public Nullable<DateTime> Date(string text)
+        public DateTime? Date(string text)
         {
             string input;
             DateTime rd;
@@ -93,9 +93,9 @@ namespace Presentation
             
             return shipVia;
         }
-        public Nullable<decimal> positiveOrZeroDecimal(string text)
+        public decimal? PositiveOrZeroDecimal(string text)
         {
-            Nullable<decimal> fr;
+            decimal? fr;
             decimal n;
             do
             {

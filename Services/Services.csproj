@@ -43,6 +43,7 @@
     <Compile Include="CustomerServices.cs" />
     <Compile Include="EmployeeServices.cs" />
     <Compile Include="DTOs\OrderDetailDTO.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="OrderDetailServices.cs" />
     <Compile Include="DTOs\OrderDTO.cs" />
     <Compile Include="OrderServices.cs" />

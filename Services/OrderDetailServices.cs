@@ -65,27 +65,25 @@ namespace Services
         }
         private Order_Detail ConvertToOrderDetail(OrderDetailDTO dto)
         {
-            var orderDetail = new Order_Detail();
-
-            orderDetail.OrderID = dto.OrderID;
-            orderDetail.ProductID = dto.ProductID;
-            orderDetail.UnitPrice = dto.UnitPrice;
-            orderDetail.Quantity = dto.Quantity;
-            orderDetail.Discount = dto.Discount;
-
-            return orderDetail;
+            return new Order_Detail()
+            {
+                OrderID = dto.OrderID,
+                ProductID = dto.ProductID,
+                UnitPrice = dto.UnitPrice,
+                Quantity = dto.Quantity,
+                Discount = dto.Discount
+            };
         }
         private OrderDetailDTO ConvertToDTO(Order_Detail od)
         {
-            var orderDetailDTO = new OrderDetailDTO();
-
-            orderDetailDTO.OrderID = od.OrderID;
-            orderDetailDTO.ProductID = od.ProductID;
-            orderDetailDTO.UnitPrice = od.UnitPrice;
-            orderDetailDTO.Quantity = od.Quantity;
-            orderDetailDTO.Discount = od.Discount;
-
-            return orderDetailDTO;
+            return new OrderDetailDTO()
+            {
+                OrderID = od.OrderID,
+                ProductID = od.ProductID,
+                UnitPrice = od.UnitPrice,
+                Quantity = od.Quantity,
+                Discount = od.Discount
+            };
         }
     }
 }

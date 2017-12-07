@@ -45,6 +45,29 @@ namespace Services
 
             return ConvertOrderToDTO(order);
         }
+        public void Update(OrderDTO orderDto)
+        {
+            var order = _orderRepository
+                .Set()
+                .FirstOrDefault(o => o.OrderID == orderDto.OrderID);
+                
+            order.OrderID = orderDto.OrderID;
+            order.CustomerID = orderDto.CustomerID;
+            order.EmployeeID = orderDto.EmployeeID;
+            order.OrderDate = orderDto.OrderDate;
+            order.RequiredDate = orderDto.RequiredDate;
+            order.ShippedDate = orderDto.ShippedDate;
+            order.ShipVia = orderDto.ShipVia;
+            order.Freight = orderDto.Freight;
+            order.ShipName = orderDto.ShipName;
+            order.ShipAddress = orderDto.ShipAddress;
+            order.ShipCity = orderDto.ShipCity;
+            order.ShipRegion = orderDto.ShipRegion;
+            order.ShipPostalCode = orderDto.ShipPostalCode;
+            order.ShipCountry = orderDto.ShipCountry;
+
+            _orderRepository.SaveChanges();
+        }
         private bool ValidOrder(OrderDTO orderDto)
         {
             if (orderDto.CustomerID.Count() != 5) return false;
@@ -53,7 +76,11 @@ namespace Services
             var employee = employees.Set().FirstOrDefault(e => e.EmployeeID == orderDto.EmployeeID);
 
             if (employee == null) return false;
-            if ((orderDto.ShipVia < 1) || (orderDto.ShipVia > 3)) return false;
+            if ((orderDto.ShipVia < 1) || (orderDto.ShipVia > 3))
+            {
+                return false;
+            }
+
             if (orderDto.Freight < 0) return false;
             if (orderDto.ShipName.Count() > 40) return false;
             if (orderDto.ShipAddress.Count() > 60) return false;
@@ -67,7 +94,7 @@ namespace Services
         private Order ConvertOrderDTO(OrderDTO orderDto)
         {
             var newOrder = new Order();
-
+            newOrder.OrderID = orderDto.OrderID;
             newOrder.CustomerID = orderDto.CustomerID;
             newOrder.EmployeeID = orderDto.EmployeeID;
             newOrder.OrderDate = orderDto.OrderDate;
