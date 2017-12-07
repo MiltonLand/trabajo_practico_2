@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
+using Services.DTOs;
 
 namespace Services
 {
@@ -75,9 +76,22 @@ namespace Services
                 .Set()
                 .FirstOrDefault(o => o.OrderID == orderDto.OrderID);
 
-            if ((order.Customer.Country != "Mexico") && (order.Customer.Country != "France"))
+            var orderDetailServices = new OrderDetailServices();
+
+            if (order.Customer != null)
             {
-                var orderDetailServices = new OrderDetailServices();
+                if ((order.Customer.Country != "Mexico") && (order.Customer.Country != "France"))
+                {
+
+                    orderDetailServices.DeleteByOrderID(order.OrderID);
+
+                    _orderRepository.Remove(order);
+                    _orderRepository.SaveChanges();
+                    return true;
+                }
+            }
+            else
+            {
 
                 orderDetailServices.DeleteByOrderID(order.OrderID);
 
@@ -86,8 +100,66 @@ namespace Services
                 return true;
             }
 
+
             return false;
         }
+
+        public ProductDTO2 GetBestSellingProduct(string country)
+        {
+            var productServices = new ProductServices();
+            var orderDetailServices = new OrderDetailServices();
+
+            var productList = productServices.GetAllProducts();
+            var orderDetailList = orderDetailServices.GetAllOrderDetails();
+            
+
+            var orderGroup = _orderRepository.Set().GroupBy(o => o.Customer.Country);
+
+            var ordersInCountry = new List<Order>();
+
+            foreach (var group in orderGroup)
+            {
+                foreach (var order in group)
+                {
+                    if (group.Key == country)
+                    {
+                        ordersInCountry.Add(order);
+                    }
+                }
+            }
+
+            foreach (var o in ordersInCountry)
+            {
+                foreach (var od in o.Order_Details)
+                {
+                    foreach (var p in productList)
+                    {
+                        if (p.ProductID == od.ProductID)
+                        {
+                            p.TotalQuantity += od.Quantity;
+                        }
+                    }
+                }
+            }
+
+            decimal currentValue;
+            decimal maxValue = 0;
+
+            ProductDTO2 BestSellingProduct = null;
+
+            foreach (var p in productList)
+            {
+                currentValue = p.TotalQuantity;
+                if (currentValue > maxValue)
+                {
+                    maxValue = currentValue;
+                    BestSellingProduct = p;
+                }
+            }
+
+            return BestSellingProduct;
+        }
+
         private bool ValidOrder(OrderDTO orderDto)
         {
             if (orderDto.CustomerID.Count() != 5) return false;
@@ -113,23 +185,23 @@ namespace Services
         }
         private Order ConvertOrderDTO(OrderDTO orderDto)
         {
-            var newOrder = new Order();
-            newOrder.OrderID = orderDto.OrderID;
-            newOrder.CustomerID = orderDto.CustomerID;
-            newOrder.EmployeeID = orderDto.EmployeeID;
-            newOrder.OrderDate = orderDto.OrderDate;
-            newOrder.RequiredDate = orderDto.RequiredDate;
-            newOrder.ShippedDate = orderDto.ShippedDate;
-            newOrder.ShipVia = orderDto.ShipVia;
-            newOrder.Freight = orderDto.Freight;
-            newOrder.ShipName = orderDto.ShipName;
-            newOrder.ShipAddress = orderDto.ShipAddress;
-            newOrder.ShipCity = orderDto.ShipCity;
-            newOrder.ShipRegion = orderDto.ShipRegion;
-            newOrder.ShipPostalCode = orderDto.ShipPostalCode;
-            newOrder.ShipCountry = orderDto.ShipCountry;
-
-            return newOrder;
+            return new Order
+            {
+                OrderID = orderDto.OrderID,
+                CustomerID = orderDto.CustomerID,
+                EmployeeID = orderDto.EmployeeID,
+                OrderDate = orderDto.OrderDate,
+                RequiredDate = orderDto.RequiredDate,
+                ShippedDate = orderDto.ShippedDate,
+                ShipVia = orderDto.ShipVia,
+                Freight = orderDto.Freight,
+                ShipName = orderDto.ShipName,
+                ShipAddress = orderDto.ShipAddress,
+                ShipCity = orderDto.ShipCity,
+                ShipRegion = orderDto.ShipRegion,
+                ShipPostalCode = orderDto.ShipPostalCode,
+                ShipCountry = orderDto.ShipCountry
+            };
         }
         private OrderDTO ConvertOrderToDTO(Order order)
         {

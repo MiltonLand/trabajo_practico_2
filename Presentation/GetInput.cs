@@ -153,7 +153,7 @@ namespace Presentation
             } while ((input == "Y") || (input != "N"));
 
             if (firstOrder == true)
-                ImportantMessage("No orders added. ");
+                ImportantMessage("No receipt added. ");
         }
         public int OrderID()
         {
@@ -218,7 +218,6 @@ namespace Presentation
 
             } while (product == null);
 
-
             return product;
         }
         private short Quantity()
@@ -234,13 +233,37 @@ namespace Presentation
 
             return quantity;
         }
-        private static void ImportantMessage(string text)
+
+        private static void ReallyImportantMessage(string text, int lineLength = 66)
         {
             Console.Clear();
+            ImportantMessage(text);
+        }
+        private static void ImportantMessage(string text, int lineLength = 66)
+        {
             Line();
-            Console.WriteLine("| " + text);
+            MessageInsideBox(text);
             Line();
-            Console.ReadLine();
+            StandBy();
+        }
+        private static string StandBy()
+        {
+            Console.Write("\n > ");
+            return Console.ReadLine();
+        }
+        private static void MessageInsideBox(string text, int lineLength = 66)
+        {
+            int length = text.Count();
+            lineLength -= 2;
+            Console.Write("| " + text);
+            if (length < lineLength)
+            {
+                for (int i = 0; i < lineLength - length - 1; i++)
+                {
+                    Console.Write(" ");
+                }
+            }
+            Console.WriteLine("|");
         }
         private static void Line()
         {

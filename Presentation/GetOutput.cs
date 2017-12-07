@@ -40,6 +40,16 @@ namespace Presentation
 
             return oDetailList;
         }
+        public List<OrderDetailDTO> GetAllOrderDetails()
+        {
+            var oDetailServices = new OrderDetailServices();
+            return oDetailServices.GetAllOrderDetails();
+        }
+        public List<Tuple<string, string>> BiggestBuyers()
+        {
+            var customerServices = new CustomerServices();
 
+            return customerServices.BiggestBuyersByCountry();
+        }
     }
 }

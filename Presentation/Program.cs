@@ -27,7 +27,9 @@ namespace Presentation
                 MessageInsideBox("2 - Read order.");
                 MessageInsideBox("3 - Update order.");
                 MessageInsideBox("4 - Delete order.");
-                MessageInsideBox("5 - Exit.");
+                MessageInsideBox("5 - Show all receipts.");
+                MessageInsideBox("6 - Show biggest buyer.");
+                MessageInsideBox("7 - Exit.");
                 Line();
                 input = StandBy();
                 Console.Clear();
@@ -47,15 +49,62 @@ namespace Presentation
                         DeleteOrder();
                         break;
                     case "5":
+                        ShowAllReceipts();
+                        break;
+                    case "6":
+                        ShowBiggestsBuyers();
+                        break;
+                    case "7":
                         break;
                     default:
                         ReallyImportantMessage("Invalid operation. ");
                         break;
                 }
 
-            } while (input != "5");
+            } while (input != "7");
 
             ImportantMessage("Goodbye!");
+        }
+
+        private static void ShowBiggestsBuyers()
+        {
+            var getOutput = new GetOutput();
+            Console.Clear();
+            Line();
+            MessageInsideBox("Calculating...");
+            Line();
+
+            var orderServices = new OrderServices();
+
+            var biggestBuyers = getOutput.BiggestBuyers();
+            
+            Console.Clear();
+            foreach (var tuple in biggestBuyers)
+            {
+                Line();
+                MessageInsideBox($"{tuple.Item1}:");
+                MessageInsideBox($"Biggest buyer: {tuple.Item2}");
+                MessageInsideBox($"Best selling product: {orderServices.GetBestSellingProduct(tuple.Item1).ProductName}");
+            }
+            ImportantMessage("Press any key to continue...");
+        }
+
+        private static void ShowAllReceipts()
+        {
+            var getOutput = new GetOutput();
+            var customerServices = new CustomerServices();
+            var orderServices = new OrderServices();
+
+            var oDetailList = getOutput.GetAllOrderDetails();
+
+            foreach (var od in oDetailList)
+            {
+                string customerID = orderServices.Find(od.OrderID).CustomerID;
+                
+                Line();
+                MessageInsideBox($"ORDER {od.OrderID} | CLIENT: {customerServices.GetName(customerID)} | TOTAL: {String.Format("{0:0.00}", getOutput.Subtotal(od))}");
+            }
+            ImportantMessage("Press any key to continue...");
         }
 
         private static void DeleteOrder()
@@ -89,6 +138,7 @@ namespace Presentation
             {
                 var orderServices = new OrderServices();
                 bool success = orderServices.Delete(orderDto);
+
                 if (success)
                     ReallyImportantMessage("Order deleted.");
                 else
@@ -217,7 +267,7 @@ namespace Presentation
 
             Console.Clear();
             Line();
-            MessageInsideBox($"Order Nro. {id}");
+            MessageInsideBox($"Order number: {id}");
             Line();
 
             PrintOrder(orderDto);
@@ -230,7 +280,7 @@ namespace Presentation
             {
                 count++;
                 Line();
-                MessageInsideBox($"Bill Nro. {count}");
+                MessageInsideBox($"Bill number {count}");
                 Line();
                 MessageInsideBox($"Product: {productServices.GetProductNameById(od.ProductID)}");
                 MessageInsideBox($"Unit price: {String.Format("{0:0.00}", od.UnitPrice)}");
@@ -273,6 +323,7 @@ namespace Presentation
             var amount = getOutput.Total(newOrderDTO);
             ReallyImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {String.Format("{0:0.00}", amount)} se ha creado correctamente.");
         }
+
         private static void PrintOrder(OrderDTO orderDto)
         {
             MessageInsideBox($"Customer ID: {orderDto.CustomerID}");
@@ -310,15 +361,15 @@ namespace Presentation
         {
             int length = text.Count();
             lineLength -= 2;
+            Console.Write("| " + text);
             if (length < lineLength)
             {
-                Console.Write("| " + text);
                 for (int i = 0; i < lineLength - length - 1; i++)
                 {
                     Console.Write(" ");
                 }
-                Console.WriteLine("|");
             }
+            Console.WriteLine("|");
         }
         private static void Line()
         {

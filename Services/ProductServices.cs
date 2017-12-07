@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess;
+using Services.DTOs;
 
 namespace Services
 {
@@ -46,6 +47,24 @@ namespace Services
             var product = _productRepository.Set().FirstOrDefault(p => p.ProductID == id);
 
             return product.ProductName;
+        }
+        public List<ProductDTO2> GetAllProducts()
+        {
+            var prodRepo = _productRepository.Set();
+
+            var list = new List<ProductDTO2>();
+
+            foreach (var p in prodRepo)
+            {
+                list.Add(new ProductDTO2
+                {
+                    ProductID = p.ProductID,
+                    ProductName = p.ProductName,
+                    TotalQuantity = 0
+                });
+            }
+
+            return list;
         }
     }
 }

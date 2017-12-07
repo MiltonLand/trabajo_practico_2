@@ -28,6 +28,7 @@ namespace Services
 
             return list;
         }
+
         public decimal Subtotal(OrderDetailDTO od)
         {
             decimal subtotal = 0;
@@ -77,6 +78,22 @@ namespace Services
             }
 
             _orderDetailRepository.SaveChanges();
+        }
+        public List<OrderDetailDTO> GetAllOrderDetails()
+        {
+            var oDetails = _orderDetailRepository.Set();
+
+            var oDetailList = new List<OrderDetailDTO>();
+
+            OrderDetailDTO oDetailDto;
+
+            foreach (var od in oDetails)
+            {
+                oDetailDto = ConvertToDTO(od);
+                oDetailList.Add(oDetailDto);
+            }
+
+            return oDetailList;
         }
         private Order_Detail ConvertToOrderDetail(OrderDetailDTO dto)
         {
