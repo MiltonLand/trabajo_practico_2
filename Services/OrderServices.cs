@@ -50,7 +50,7 @@ namespace Services
             var order = _orderRepository
                 .Set()
                 .FirstOrDefault(o => o.OrderID == orderDto.OrderID);
-                
+
             order.OrderID = orderDto.OrderID;
             order.CustomerID = orderDto.CustomerID;
             order.EmployeeID = orderDto.EmployeeID;
@@ -66,6 +66,15 @@ namespace Services
             order.ShipPostalCode = orderDto.ShipPostalCode;
             order.ShipCountry = orderDto.ShipCountry;
 
+            _orderRepository.SaveChanges();
+        }
+        public void Delete(OrderDTO orderDto)
+        {
+            var order = _orderRepository
+                .Set()
+                .FirstOrDefault(o => o.OrderID == orderDto.OrderID);
+
+            _orderRepository.Remove(order);
             _orderRepository.SaveChanges();
         }
         private bool ValidOrder(OrderDTO orderDto)

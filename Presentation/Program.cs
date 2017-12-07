@@ -44,7 +44,7 @@ namespace Presentation
                         UpdateOrder();
                         break;
                     case "4":
-                        //DeleteOrder();
+                        DeleteOrder();
                         break;
                     case "5":
                         break;
@@ -58,6 +58,44 @@ namespace Presentation
             ImportantMessage("Goodbye!");
         }
 
+        private static void DeleteOrder()
+        {
+            var getInput = new GetInput();
+            var getOutput = new GetOutput();
+
+            int id = getInput.OrderID();
+            var orderDto = getOutput.GetOrderByID(id);
+
+            string input;
+
+            do
+            {
+                Console.Clear();
+                Line();
+                MessageInsideBox($"Order Nro. {id}");
+                Line();
+
+                PrintOrder(orderDto);
+
+                Line();
+                MessageInsideBox("Delete this order(Y/N)?");
+                Line();
+
+                input = StandBy();
+
+            } while ((input != "N") && (input != "Y"));
+
+            if (input == "Y")
+            {
+                var orderServices = new OrderServices();
+                orderServices.Delete(orderDto);
+                ReallyImportantMessage("Order deleted.");
+            }
+            else
+            {
+                ReallyImportantMessage("Order kept.");
+            }
+        }
         private static void UpdateOrder()
         {
             var getInput = new GetInput();
@@ -168,35 +206,24 @@ namespace Presentation
             var getOutput = new GetOutput();
 
             int id = getInput.OrderID();
-            var order = getOutput.GetOrderByID(id);
-            var orderDetails = getOutput.GetOrderDetailsByID(id);
+            var orderDto = getOutput.GetOrderByID(id);
+            var orderDetailsDto = getOutput.GetOrderDetailsByID(id);
 
-            if ((order == null) || (orderDetails == null))
+            if ((orderDto == null) || (orderDetailsDto == null))
                 ReallyImportantMessage("Error.");
 
             Console.Clear();
             Line();
             MessageInsideBox($"Order Nro. {id}");
             Line();
-            MessageInsideBox($"Customer ID: {order.CustomerID}");
-            MessageInsideBox($"Employee ID: {order.EmployeeID}");
-            MessageInsideBox($"Order Date: {order.OrderDate}");
-            MessageInsideBox($"Required Date: {order.RequiredDate}");
-            MessageInsideBox($"Shipped Date: {order.ShippedDate}");
-            MessageInsideBox($"Ship Via: {order.ShipVia}");
-            MessageInsideBox($"Freight: {String.Format("{0:0.00}", order.Freight)}");
-            MessageInsideBox($"Ship Name: {order.ShipName}");
-            MessageInsideBox($"Ship Address: {order.ShipAddress}");
-            MessageInsideBox($"Ship City: {order.ShipCity}");
-            MessageInsideBox($"Ship Region: {order.ShipRegion}");
-            MessageInsideBox($"Ship Postal Code: {order.ShipPostalCode}");
-            MessageInsideBox($"Ship Country: {order.ShipCountry}");
+
+            PrintOrder(orderDto);
             
             var productServices = new ProductServices();
 
             int count = 0;
 
-            foreach (var od in orderDetails)
+            foreach (var od in orderDetailsDto)
             {
                 count++;
                 Line();
@@ -209,7 +236,7 @@ namespace Presentation
                 MessageInsideBox($"Subtotal: {String.Format("{0:0.00}", getOutput.Subtotal(od))}");
             }
             Line();
-            MessageInsideBox($"Total(with freight): {String.Format("{0:0.00}", getOutput.Total(order))}");
+            MessageInsideBox($"Total(with freight): {String.Format("{0:0.00}", getOutput.Total(orderDto))}");
 
             ImportantMessage("Press any key to continue...");
         }
@@ -242,6 +269,22 @@ namespace Presentation
             var getOutput = new GetOutput();
             var amount = getOutput.Total(newOrderDTO);
             ReallyImportantMessage($"Orden Id {newOrderDTO.OrderID} con importe {String.Format("{0:0.00}", amount)} se ha creado correctamente.");
+        }
+        private static void PrintOrder(OrderDTO orderDto)
+        {
+            MessageInsideBox($"Customer ID: {orderDto.CustomerID}");
+            MessageInsideBox($"Employee ID: {orderDto.EmployeeID}");
+            MessageInsideBox($"Order Date: {orderDto.OrderDate}");
+            MessageInsideBox($"Required Date: {orderDto.RequiredDate}");
+            MessageInsideBox($"Shipped Date: {orderDto.ShippedDate}");
+            MessageInsideBox($"Ship Via: {orderDto.ShipVia}");
+            MessageInsideBox($"Freight: {String.Format("{0:0.00}", orderDto.Freight)}");
+            MessageInsideBox($"Ship Name: {orderDto.ShipName}");
+            MessageInsideBox($"Ship Address: {orderDto.ShipAddress}");
+            MessageInsideBox($"Ship City: {orderDto.ShipCity}");
+            MessageInsideBox($"Ship Region: {orderDto.ShipRegion}");
+            MessageInsideBox($"Ship Postal Code: {orderDto.ShipPostalCode}");
+            MessageInsideBox($"Ship Country: {orderDto.ShipCountry}");
         }
         private static void ReallyImportantMessage(string text, int lineLength = 66)
         {
